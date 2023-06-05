@@ -2,9 +2,10 @@ using System.ComponentModel.DataAnnotations;
 
 public class Ingresos
 {
+    [Key]
     public int IngresoId { get; set; }
     public DateTime Fecha { get; set; }
-    
+
     [Required(ErrorMessage = "El concepto es un campo obligatorio")]
     public string? Concepto { get; set; }
 
