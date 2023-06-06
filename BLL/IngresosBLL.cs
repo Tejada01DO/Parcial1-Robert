@@ -51,7 +51,7 @@ public class IngresosBLL
         return eliminado > 0;
     }
 
-    public Ingresos Buscar(int IngresoId)
+    public Ingresos? Buscar(int IngresoId)
     {
         return _context.Ingresos.AsNoTracking().SingleOrDefault(i => i.IngresoId == IngresoId);
     }
