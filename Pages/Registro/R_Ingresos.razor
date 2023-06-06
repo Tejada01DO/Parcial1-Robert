@@ -1,0 +1,143 @@
+@page "/RegistroIngresos"
+@page "/RegistroIngresos/{IngresoId:int}"
+
+@inject IngresosBLL IngresosBLL
+
+<EditForm Model="ingresos" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+    <div class="card">
+
+        <div class="card-header">
+            <h1>Registro de Ingresos</h1>
+        </div>
+
+        <div class="card-body">
+
+            <label>ID Ingreso</label>
+            <div class="input-group">
+                <InputNumber @bind-Value="ingresos.IngresoId" class="form-control"></InputNumber>
+                <button type="button" class="btn btn-outline-primary oi oi-magnifying-glass" @onclick="Buscar"></button>
+            </div>
+
+            <label>Fecha</label>
+            <InputDate @bind-Value="ingresos.Fecha" class="form-control"></InputDate>
+            <ValidationMessage For="@(() => ingresos.Fecha)" />
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label>Concepto</label>
+                    <InputText @bind-Value="ingresos.Concepto" class="form-control"></InputText>
+                    <ValidationMessage For="@(() => ingresos.Concepto)" />
+                </div>
+
+                <div class="col-md-6">
+                    <label>Monto</label>
+                    <InputNumber @bind-Value="ingresos.Monto" class="form-control"></InputNumber>
+                    <ValidationMessage For="@(() => ingresos.Monto)" />
+                </div>
+            </div>
+        </div>
+
+        <div class="card-footer">
+            <button type="button" class="btn btn-outline-primary" @onclick="Nuevo">Nuevo <i class="oi oi-file"/></button>
+            <button type="submit" class="btn btn-outline-success" @onclick="Guardar">Guardar <i class="oi oi-document"/></button>
+            <button type="button" class="btn btn-outline-danger" @onclick="Eliminar">Eliminar <i class="oi oi-trash"/></button>
+        </div>
+    </div>
+</EditForm>
+<label>@mensaje</label>
+
+@code
+{
+    [Parameter]
+
+    public int IngresoId { get; set; }
+    public Ingresos ingresos { get; set; } = new Ingresos();
+    public string mensaje = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        if(IngresoId > 0)
+        {
+            ingresos.IngresoId = IngresoId;
+            Buscar();
+        }
+    }
+
+    public bool Validar()
+    {
+        if(string.IsNullOrEmpty(ingresos.Concepto))
+        {
+            return false;
+        }
+        if(ingresos.Monto < 0)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+    public void Buscar()
+    {
+        var ingresoEncontrado = IngresosBLL.Buscar(ingresos.IngresoId);
+
+        if(ingresoEncontrado != null)
+        {
+            this.ingresos = ingresoEncontrado;
+        }
+        else
+        {
+            mensaje = "Ingreso no encontrado";
+        }
+    }
+
+    public void Nuevo()
+    {
+        this.ingresos = new Ingresos();
+        this.ingresos.Fecha = DateTime.Now;
+        mensaje = string.Empty;
+    }
+
+    public void Guardar()
+    {
+        if(Validar())
+        {
+            if(IngresosBLL.Guardar(this.ingresos))
+            {
+                mensaje = "Ingreso guardado correctamente";
+                Nuevo();
+            }
+            else
+            {
+                mensaje = "Ocurrio un error, intentelo de nuevo";
+            }
+        }
+        else
+        {
+            mensaje = "Por favor, rellene los campos";
+        }
+    }
+
+    public void Eliminar()
+    {
+        if(Validar())
+        {
+            if(IngresosBLL.Eliminar(this.ingresos))
+            {
+                mensaje = "El ingreso se elimino correctamente";
+                Nuevo();
+            }
+            else
+            {
+                mensaje = "Ocurrio un error, intentelo de nuevo";
+            }
+        }
+        else
+        {
+            mensaje = "No hay nada por eliminar";
+        }
+    }
+}

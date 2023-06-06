@@ -1,0 +1,35 @@
+@page "/ConsultaIngresos"
+
+@inject IngresosBLL IngresosBLL
+
+<table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID Ingreso</th>
+                <th>Fecha</th>
+                <th>Concepto</th>
+                <th>Monto</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in L_Ingresos)
+            {
+                <tr>
+                    <td>@item.IngresoId</td>
+                    <td>@item.Fecha</td>
+                    <td>@item.Concepto</td>
+                    <td>@item.Monto</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+@code
+{
+    public List<Ingresos> L_Ingresos { get; set; } = new List<Ingresos>();
+
+        protected override void OnInitialized()
+        {
+            L_Ingresos = IngresosBLL.Listar(l => true);
+        }
+}

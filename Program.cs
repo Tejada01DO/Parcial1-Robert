@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
-using PrimerParcial.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +12,6 @@ builder.Services.AddDbContext<Context>(options => options.UseSqlite(ConStr));
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<IngresosBLL>();
-builder.Services.AddSingleton<WeatherForecastService>();
 
 var app = builder.Build();
 
