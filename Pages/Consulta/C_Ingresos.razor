@@ -2,13 +2,20 @@
 
 @inject IngresosBLL IngresosBLL
 
+<label>ID</label>
+<div class="input-group">
+    <InputNumber @bind-Value="filtrar" class="form-control"></InputNumber>
+    <button type="button" class="btn btn-outline-primary oi oi-magnifying-glass" @onclick="Buscar"></button>
+    <button type="button" class="btn btn-outline-primary oi oi-reload" @onclick="Reiniciar"></button>
+</div>
+
 <table class="table table-bordered">
         <thead>
             <tr>
                 <th>ID Ingreso</th>
                 <th>Fecha</th>
                 <th>Concepto</th>
-                <th>Monto</th>
+                <th>Monto</th> <th></th>
             </tr>
         </thead>
         <tbody>
@@ -19,6 +26,7 @@
                     <td>@item.Fecha</td>
                     <td>@item.Concepto</td>
                     <td>@item.Monto</td>
+                    <td><a href="/RegistroIngresos/@item.IngresoId"><span class="oi oi-eye"></span></a></td>
                 </tr>
             }
         </tbody>
@@ -26,10 +34,23 @@
 
 @code
 {
+    public Ingresos ingresos { get; set; } = new Ingresos();
+    public string mensaje = string.Empty;
+    public int filtrar { get; set; }
     public List<Ingresos> L_Ingresos { get; set; } = new List<Ingresos>();
 
         protected override void OnInitialized()
         {
             L_Ingresos = IngresosBLL.Listar(l => true);
         }
+    
+    public void Buscar()
+    {
+        L_Ingresos = IngresosBLL.Listar(l => l.IngresoId == filtrar);
+    }
+
+    public void Reiniciar()
+    {
+        L_Ingresos = IngresosBLL.Listar(l => true);
+    }
 }
